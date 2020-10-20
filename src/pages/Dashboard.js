@@ -23,6 +23,10 @@ import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import SvgIcon from '@material-ui/core/SvgIcon';
+
+import iconoInicio from '../assets/iconoInicio.svg';
+import avatar from '../assets/avatar.jpg';
 
 const theme = createMuiTheme({
   typography: { fontFamily: ['Montserrat'].join(','), },
@@ -179,9 +183,21 @@ export default function Dashboard() {
             </IconButton>
           </div>
           <Divider />
+          <div style={{height:250, width: 240, backgroundColor: 'white', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'}}>
+              <Box style={{height:50, width: 150, backgroundColor: '#FFDD00', borderBottomRightRadius: 20, borderBottomLeftRadius: 20, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}} fontWeight="fontWeightBold" boxShadow={3}>
+                MENÚ
+              </Box>
+              <div style={{height:120, width: 120, backgroundColor: 'black', borderRadius: 60}}>
+              <img src={avatar} alt="Logo" style={{height:120, width: 120}} />
+              </div>
+              <div style={{height:40, width: 200, backgroundColor: '#F2F2F2', borderRadius: 25, marginBottom: 10, display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center'}}>
+                <Box fontWeight="fontWeightBold">
+                  LUIS MARIN
+                </Box>
+              </div>
+          </div>
           <List>{mainListItems}</List>
           <Divider />
-          <List>{secondaryListItems}</List>
         </Drawer>
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />

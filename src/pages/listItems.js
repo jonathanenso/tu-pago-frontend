@@ -3,44 +3,80 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
+import Divider from '@material-ui/core/Divider';
+import iconoInicio from '../assets/iconoInicio.svg';
 
 export const mainListItems = (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <DashboardIcon />
+    <ListItem button style={{height: 50, borderTopRightRadius: 25, borderBottomRightRadius: 25, padding: 0, backgroundColor: '#F2F2F2'}}>
+      <ListItemIcon style={{alignItems: 'center', backgroundColor: '#F2F2F2'}}>
+        <div style={{height: 50, width: 10, backgroundColor: '#FFDD00', borderTopRightRadius: 5, borderBottomRightRadius: 5, marginRight: 10}}></div>
+        <div style={{height: 32, width: 32, backgroundColor: '#FFDD00', borderRadius: 16, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+          <img src={iconoInicio} style={{height: 24, width: 24}} />
+        </div>
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+      <ListItemText primary="Inicio" style={{height: 50, paddingTop: 15}}/>
     </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <ShoppingCartIcon />
+    <Divider />
+    <ListItem button style={{height: 50, borderTopRightRadius: 25, borderBottomRightRadius: 25, padding: 0, backgroundColor: 'transparent'}}>
+      <ListItemIcon style={{alignItems: 'center', backgroundColor: 'transparent'}}>
+        <div style={{height: 50, width: 10, backgroundColor: 'transparent', borderTopRightRadius: 5, borderBottomRightRadius: 5, marginRight: 10}}></div>
+        <div style={{height: 32, width: 32, backgroundColor: '#ECECEC', borderRadius: 16, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+          <img src={iconoInicio} style={{height: 24, width: 24}} />
+        </div>
       </ListItemIcon>
-      <ListItemText primary="Orders" />
+      <ListItemText primary="Depositar / Retirar" style={{height: 50, paddingTop: 15}}/>
     </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
+    <Divider />
+    <ListItem button style={{height: 50, borderTopRightRadius: 25, borderBottomRightRadius: 25, padding: 0, backgroundColor: 'transparent'}}>
+      <ListItemIcon style={{alignItems: 'center', backgroundColor: 'transparent'}}>
+        <div style={{height: 50, width: 10, backgroundColor: 'transparent', borderTopRightRadius: 5, borderBottomRightRadius: 5, marginRight: 10}}></div>
+        <div style={{height: 32, width: 32, backgroundColor: '#ECECEC', borderRadius: 16, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+          <img src={iconoInicio} style={{height: 24, width: 24}} />
+        </div>
       </ListItemIcon>
-      <ListItemText primary="Customers" />
+      <ListItemText primary="Enviar / Solicitar" style={{height: 50, paddingTop: 15}}/>
     </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
+    <Divider />
+    <ListItem button style={{height: 50, borderTopRightRadius: 25, borderBottomRightRadius: 25, padding: 0, backgroundColor: 'transparent'}}>
+      <ListItemIcon style={{alignItems: 'center', backgroundColor: 'transparent'}}>
+        <div style={{height: 50, width: 10, backgroundColor: 'transparent', borderTopRightRadius: 5, borderBottomRightRadius: 5, marginRight: 10}}></div>
+        <div style={{height: 32, width: 32, backgroundColor: '#ECECEC', borderRadius: 16, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+          <img src={iconoInicio} style={{height: 24, width: 24}} />
+        </div>
       </ListItemIcon>
-      <ListItemText primary="Reports" />
+      <ListItemText primary="Actividad" style={{height: 50, paddingTop: 15}}/>
     </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <LayersIcon />
+    <Divider />
+    <ListItem button style={{height: 50, borderTopRightRadius: 25, borderBottomRightRadius: 25, padding: 0, backgroundColor: 'transparent'}}>
+      <ListItemIcon style={{alignItems: 'center', backgroundColor: 'transparent'}}>
+        <div style={{height: 50, width: 10, backgroundColor: 'transparent', borderTopRightRadius: 5, borderBottomRightRadius: 5, marginRight: 10}}></div>
+        <div style={{height: 32, width: 32, backgroundColor: '#ECECEC', borderRadius: 16, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+          <img src={iconoInicio} style={{height: 24, width: 24}} />
+        </div>
       </ListItemIcon>
-      <ListItemText primary="Integrations" />
+      <ListItemText primary="Aceptar solicitudes" style={{height: 50, paddingTop: 15}}/>
+    </ListItem>
+    <Divider />
+    <ListItem button style={{height: 50, borderTopRightRadius: 25, borderBottomRightRadius: 25, padding: 0, backgroundColor: 'transparent'}}>
+      <ListItemIcon style={{alignItems: 'center', backgroundColor: 'transparent'}}>
+        <div style={{height: 50, width: 10, backgroundColor: 'transparent', borderTopRightRadius: 5, borderBottomRightRadius: 5, marginRight: 10}}></div>
+        <div style={{height: 32, width: 32, backgroundColor: '#ECECEC', borderRadius: 16, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+          <img src={iconoInicio} style={{height: 24, width: 24}} />
+        </div>
+      </ListItemIcon>
+      <ListItemText primary="Ayuda" style={{height: 50, paddingTop: 15}}/>
+    </ListItem>
+    <Divider />
+    <ListItem button style={{height: 50, borderTopRightRadius: 25, borderBottomRightRadius: 25, padding: 0, backgroundColor: 'transparent'}}>
+      <ListItemIcon style={{alignItems: 'center', backgroundColor: 'transparent'}}>
+        <div style={{height: 50, width: 10, backgroundColor: 'transparent', borderTopRightRadius: 5, borderBottomRightRadius: 5, marginRight: 10}}></div>
+        <div style={{height: 32, width: 32, backgroundColor: '#ECECEC', borderRadius: 16, justifyContent: 'center', alignItems: 'center', display: 'flex'}}>
+          <img src={iconoInicio} style={{height: 24, width: 24}} />
+        </div>
+      </ListItemIcon>
+      <ListItemText primary="Cerrar sesión" style={{height: 50, paddingTop: 15}}/>
     </ListItem>
   </div>
 );
