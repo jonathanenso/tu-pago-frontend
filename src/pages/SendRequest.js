@@ -9,27 +9,21 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import Badge from '@material-ui/core/Badge';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-// import NotificationsIcon from '@material-ui/icons/Notifications';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import NotificationsIcon from '@material-ui/icons/Notifications';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from "react-router-dom";
-
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import SideMenu from '../components/SideMenu';
-import { userActions } from '../actions';
 
 const theme = createMuiTheme({
   typography: { fontFamily: ['Montserrat'].join(','), },
@@ -137,37 +131,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Dashboard() {
+export default function SendRequest() {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(true);
   const userShow = useSelector(state => state.authentication.user);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  let history = useHistory();
-
-  const dispatch = useDispatch();
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-const selectProfile = () => {
-  history.push('/perfil');
-  setAnchorEl(null);
-}
-
-const logout = () => {
-  dispatch(userActions.logout());
-  history.push('/login');
-
-  setAnchorEl(null);
-}
-
-
+  const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -192,21 +159,13 @@ const logout = () => {
               <MenuIcon />
             </IconButton>
             <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-              Inicio
+            Enviar / Solicitar
           </Typography>
-            <Button aria-controls="simple-menu" aria-haspopup="true" onClick={handleClick}>
-                <AccountCircleIcon />
-            </Button>
-            <Menu
-              id="simple-menu"
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-            >
-              <MenuItem onClick={selectProfile}>Perfil</MenuItem>
-              <MenuItem onClick={logout}>Cerrar sesión</MenuItem>
-            </Menu>
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
+                <NotificationsIcon />
+              </Badge>
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer
@@ -222,7 +181,7 @@ const logout = () => {
             </IconButton>
           </div>
           <Divider />
-          <SideMenu select={'Inicio'} userShow={userShow}></SideMenu>
+          <SideMenu select={'EnviarSolicitar'} userShow={userShow}></SideMenu>
           <Divider />
         </Drawer>
         <main className={classes.content}>

@@ -1,5 +1,5 @@
 // IMPORTACIONES
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -15,10 +15,13 @@ import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
 import EmailIcon from '@material-ui/icons/Email';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import axios from 'axios';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { userActions } from '../actions';
 
 // ASSETS
 import fondo from '../assets/fondoLogin.png';
@@ -89,14 +92,27 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Registration() {
     const classes = useStyles();
-    const [message, setMessage] = React.useState('');
-    const [open, setOpen] = React.useState(false);
-    const [openSuccess, setOpenSuccess] = React.useState(false);
-    const [names, setNames] = React.useState('');
-    const [lastnames, setLastnames] = React.useState('');
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [repassword, setRepassword] = React.useState('');
+    const [message, setMessage] = useState('');
+    const [open, setOpen] = useState(false);
+    const [openSuccess, setOpenSuccess] = useState(false);
+    const [names, setNames] = useState('');
+    const [lastnames, setLastnames] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [repassword, setRepassword] = useState('');
+
+    const [user, setUser] = useState({
+        firstName: '',
+        lastName: '',
+        username: '',
+        password: ''
+    });
+
+    const [submitted, setSubmitted] = useState(false);
+    const registering = useSelector(state => state.users.registering);
+    const success = useSelector(state => state.users.success);
+    const alert = useSelector(state => state.alert);
+    const dispatch = useDispatch();
 
     let history = useHistory();
 
@@ -118,23 +134,32 @@ export default function Registration() {
                         setMessage('La contraseña proporcionada es demasiado corta');
                         setOpen(true);
                     } else {
-                        axios.post('http://localhost:5000/users/register', {
-                            "firstName": names,
-                            "lastName": lastnames,
-                            "email": email,
-                            "password": password,
-                            "role": "1"
-                        })
-                            .then(function (response) {
-                                console.log(response);
-                                setMessage('¡Registro exitoso! Revise su correo electrónico para verificar su registro');
-                                setOpenSuccess(true);
-                            })
-                            .catch(function (error) {
-                                console.log(error.response);
-                                setMessage(error.response.data.message);
-                                setOpen(true);
-                            });
+                        // axios.post('http://localhost:5000/users/register', {
+                        //     "firstName": names,
+                        //     "lastName": lastnames,
+                        //     "email": email,
+                        //     "password": password,
+                        //     "role": "1"
+                        // })
+                        //     .then(function (response) {
+                        //         console.log(response);
+                        //         setMessage('¡Registro exitoso! Revise su correo electrónico para verificar su registro');
+                        //         setOpenSuccess(true);
+                        //     })
+                        //     .catch(function (error) {
+                        //         console.log(error.response);
+                        //         setMessage(error.response.data.message);
+                        //         setOpen(true);
+                        //     });
+                        if (names && lastnames && email && password) {
+                            dispatch(userActions.register({
+                                "firstName": names,
+                                "lastName": lastnames,
+                                "email": email,
+                                "password": password,
+                                "role": "1"
+                            }));
+                        }
                     }
                 }
 
@@ -161,6 +186,19 @@ export default function Registration() {
         history.push('/login');
     };
 
+    useEffect(() => {
+        console.log(alert);
+    }, [alert]);
+
+    useEffect(() => {
+        console.log('Cambio la confirmacion')
+        if (success){
+            history.push('/login'); 
+        }else{
+
+        }
+    }, [success]);
+
     return (
         <MuiThemeProvider theme={theme}>
             <Grid container component="main" className={classes.root}>
@@ -177,7 +215,7 @@ export default function Registration() {
                         <img src={logo} alt="Logo" className={classes.avatar} />
                         <Typography component="h1" variant="h5">
                             UN GUSTO SALUDARTE
-          </Typography>
+                        </Typography>
                         <form className={classes.form} noValidate>
                             <TextField
                                 margin="normal"
@@ -266,17 +304,30 @@ export default function Registration() {
                                 }}
                                 onChange={(event) => { setRepassword(event.target.value) }}
                             />
-                            <Button
-                                onClick={() => { register() }}
-                                fullWidth
-                                variant="contained"
-                                color="primary"
-                                className={classes.submit}
-                            >
-                                <Box fontWeight="fontWeightBold">
-                                    Registrarme
-              </Box>
-                            </Button>
+                            {registering ? (
+                                <Button
+                                    onClick={() => { register() }}
+                                    fullWidth
+                                    variant="contained"
+                                    color="primary"
+                                    className={classes.submit}
+                                >
+                                    <CircularProgress color="secondary" />
+                                </Button>
+                            ) : (
+                                    <Button
+                                        onClick={() => { register() }}
+                                        fullWidth
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                    >
+                                        <Box fontWeight="fontWeightBold">
+                                            Registrarme
+                                        </Box>
+                                    </Button>
+                                )}
+
                             <Box mt={5}>
                                 <Copyright />
                             </Box>

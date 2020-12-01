@@ -1,5 +1,6 @@
 // IMPORTACIONES
 import React from 'react';
+import {useState, useEffect} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -14,6 +15,7 @@ import LockRoundedIcon from '@material-ui/icons/LockRounded';
 import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -21,6 +23,7 @@ import MuiAlert from '@material-ui/lab/Alert';
 // ASSETS
 import fondo from '../assets/fondoLogin.png';
 import logo from '../assets/logo.svg';
+import { userActions } from '../actions';
 
 const theme = createMuiTheme({
     typography: { fontFamily: ['Montserrat'].join(','), },
@@ -88,13 +91,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
     const classes = useStyles();
-    const [email, setEmail] = React.useState('');
-    const [password, setPassword] = React.useState('');
-    const [message, setMessage] = React.useState('');
-    const [open, setOpen] = React.useState(false);
-    const [openSuccess, setOpenSuccess] = React.useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [message, setMessage] = useState('');
+    const [open, setOpen] = useState(false);
+    const [openSuccess, setOpenSuccess] = useState(false);
+
+    const [submitted, setSubmitted] = useState(false);
+	// const loggingIn = useSelector(state => state.authentication.loggingIn);
+    const alert = useSelector(state => state.alert);
+    const loggedIn = useSelector(state => state.authentication.loggedIn);
+    const dispatch = useDispatch();
 
     let history = useHistory();
+
+    useEffect(() => {
+        if(loggedIn){
+            history.push('/inicio');
+        }
+    }, [loggedIn]);
 
     let authenticate = () => {
         if (email === '' || password === '') {
@@ -110,20 +125,21 @@ export default function Login() {
                     setMessage('La contraseña proporcionada es demasiado corta');
                     setOpen(true);
                 } else {
-                    axios.post('http://localhost:5000/users/authenticate', {
-                        "email": email,
-                        "password": password,
-                    })
-                        .then(function (response) {
-                            console.log(response);
-                            setMessage('¡Inicio de sesión exitoso!');
-                            setOpenSuccess(true);
-                        })
-                        .catch(function (error) {
-                            console.log(error.response);
-                            setMessage(error.response.data.message);
-                            setOpen(true);
-                        });
+                    // axios.post('http://localhost:5000/users/authenticate', {
+                    //     "email": email,
+                    //     "password": password,
+                    // })
+                    //     .then(function (response) {
+                    //         console.log(response);
+                    //         setMessage('¡Inicio de sesión exitoso!');
+                    //         setOpenSuccess(true);
+                    //     })
+                    //     .catch(function (error) {
+                    //         console.log(error.response);
+                    //         setMessage(error.response.data.message);
+                    //         setOpen(true);
+                    //     });
+                    dispatch(userActions.login(email, password));
                 }
 
             }
@@ -146,7 +162,7 @@ export default function Login() {
         }
 
         setOpenSuccess(false);
-        history.push('/tablero');
+        history.push('/inicio');
     };
 
     return (
