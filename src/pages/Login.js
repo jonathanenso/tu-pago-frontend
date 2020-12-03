@@ -165,6 +165,16 @@ export default function Login() {
         history.push('/inicio');
     };
 
+    /**
+     * Manejo de alertas
+     */
+	useEffect(() => {
+        if(alert.message){
+            setOpen(true);
+            setMessage(alert.message);
+		}
+    },[alert]);
+
     return (
         <MuiThemeProvider theme={theme}>
             <Grid container component="main" className={classes.root}>

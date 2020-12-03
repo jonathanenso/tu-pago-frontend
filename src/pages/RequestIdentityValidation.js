@@ -20,9 +20,6 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import Button from '@material-ui/core/Button';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { useDispatch, useSelector } from 'react-redux';
-import TextField from '@material-ui/core/TextField';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import PersonRoundedIcon from '@material-ui/icons/PersonRounded';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useHistory } from "react-router-dom";
 import ListItem from '@material-ui/core/ListItem';
@@ -35,6 +32,7 @@ import iconoInicio from '../assets/iconoInicio.svg';
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
 import pasaporte from '../assets/pasaporte.svg';
 import licencia from '../assets/licencia.svg';
+import Alert from '@material-ui/lab/Alert';
 
 const theme = createMuiTheme({
     typography: { fontFamily: ['Montserrat'].join(','), },
@@ -140,37 +138,23 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         borderRadius: 50
     }
-    // fixedHeight: {
-    //     height: 500,
-    // },
 }));
 
 export default function RequestIdentityValidation() {
+
     const classes = useStyles();
     const userShow = useSelector(state => state.authentication.user);
+    const uploading = useSelector(state => state.users.uploading);
+    const success = useSelector(state => state.users.success);
 
+    const [passport, setPassport] = useState(null);
+    const [document, setDocument] = useState(null);
+    const [license, setLicense] = useState(null);
 
-    const [names, setNames] = useState('');
-    const [lastnames, setLastnames] = useState('');
-    const requesting = useSelector(state => state.phone.requesting);
-    const success = useSelector(state => state.phone.success);
-
-
-
-    const [phone, setPhone] = useState('');
-    const [address, setAddress] = useState('');
-    const [city, setCity] = useState('');
-    const [state, setState] = useState('');
-    const [zip, setZip] = useState('');
-    const [birthday, setBirthday] = useState('');
-    const [document, setDocument] = useState('');
     const [message, setMessage] = useState('');
     const dispatch = useDispatch();
-    let history = useHistory();
 
-
-
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = useState(true);
     const handleDrawerOpen = () => {
         setOpen(true);
     };
@@ -179,20 +163,73 @@ export default function RequestIdentityValidation() {
     };
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+    /**
+     * Cargar los arhivos seleccionados
+     */
+    let upload = () => {
 
+        //Si no hay documentos seleccionados
+        if(!document && !passport && !license ){
+            setError(true);
+            if(idTimeOut){
+                window.clearTimeout(idTimeOut);
+            }
+            let id = window.setTimeout(()=>{setError(false)},5000); 
+            setIdTimeOut(id);
+            return;
+        }
 
+        var formData = new FormData();
 
-    let upload = (file) => {
-        console.log(file);
-        dispatch(userActions.uploadDocument(userShow.id,file));
-        // console.log('TEST',document.querySelector('input[type="file"]').files[0]);
+        if(document){
+            formData.append('documents', document);
+        }
+
+        if(passport){
+            formData.append('documents', passport);
+        }
+
+        if(passport){
+            formData.append('documents', license);
+        }
+        dispatch(userActions.uploadDocument(userShow.id,formData));
     }
 
-    // useEffect(() => {
-    //     if (success) {
-    //         history.push('/validar-telefono');
-    //     }
-    // }, [success]);
+    //Manejo de alertas
+    const alert = useSelector(state => state.alert);
+    const [visible, setVisible] = useState(true);
+
+    const onDismiss = () => {
+        setVisible(false);
+        setError(false);
+        //limpiar timeouts
+        if(idTimeOut){
+            window.clearTimeout(idTimeOut);
+        }
+    }
+    const [idTimeOut, setIdTimeOut] = useState(null);
+
+    useEffect(() => {
+        if(alert.message){
+            setVisible(true);
+            if(idTimeOut){
+                window.clearTimeout(idTimeOut);
+            }
+            let id = window.setTimeout(()=>{setVisible(false)},5000); 
+            setIdTimeOut(id);
+        }
+    },[alert]);
+
+    //Resetear campos
+    useEffect(() => {
+        if(success === true){
+            setPassport(null);
+            setDocument(null);
+            setLicense(null);
+        }
+    },[success]);
+
+    const [error, setError] = useState(false);
 
     return (
         <MuiThemeProvider theme={theme}>
@@ -245,38 +282,43 @@ export default function RequestIdentityValidation() {
                                     <Typography component="h1" variant="h5" style={{ backgroundColor: 'white' }}>
                                         VERIFICACIÓN DE IDENTIDAD
                                     </Typography>
-                                    <Typography component="body" style={{ backgroundColor: 'white' }}>
+                                    <Typography  style={{ backgroundColor: 'white' }}>
                                         Selección el tipo de documento que desea subir
                                     </Typography>
-                                    <label htmlFor="contained-button-file" style={{width: '100%', marginTop: 25}}>
-                                        <ListItem button htmlFor="contained-button-file" style={{ height: 50, borderRadius: 25, padding: 0, backgroundColor: '#F2F2F2', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                    {(alert.message && visible) &&
+                                        <Alert severity={alert.type} variant="filled" onClose={onDismiss}>{alert.message}</Alert>
+                                    }
+                                    {error &&
+                                        <Alert severity="error" variant="filled" onClose={onDismiss}>No se ha seleccionado ningún archivo</Alert>
+                                    }
+                                    <label htmlFor="contained-button-passport" style={{width: '100%', marginTop: 25}}>
+                                        <ListItem button htmlFor="contained-button-passport" style={{ height: 50, borderRadius: 25, padding: 0, backgroundColor: '#F2F2F2', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
                                             <Box style={{width: 40, height: 40, backgroundColor: '#FFDD00', borderRadius: 20, display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: 5}}>
                                                 <img src={pasaporte} style={{ height: 24, width: 24 }} />
                                             </Box>
-                                            <Typography component="body" style={{ backgroundColor: 'transparent', marginLeft: 20 }}>
-                                            PASAPORTE (Subir página del pasaporte donde esté su foto)
-                                    </Typography>
+                                            <Typography  style={{ backgroundColor: 'transparent', marginLeft: 20 }}>
+                                                PASAPORTE {passport && (passport.name)} {!passport && ('(Subir página del pasaporte donde esté su foto)')}
+                                            </Typography>
                                     </ListItem>
                                     </label>
-
-                                    <label htmlFor="contained-button-file" style={{width: '100%', marginTop: 25}}>
-                                        <ListItem button htmlFor="contained-button-file" style={{ height: 50, borderRadius: 25, padding: 0, backgroundColor: '#F2F2F2', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                    <label htmlFor="contained-button-document" style={{width: '100%', marginTop: 25}}>
+                                        <ListItem button htmlFor="contained-button-document" style={{ height: 50, borderRadius: 25, padding: 0, backgroundColor: '#F2F2F2', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
                                             <Box style={{width: 40, height: 40, backgroundColor: '#FFDD00', borderRadius: 20, display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: 5}}>
                                                 <img src={pasaporte} style={{ height: 24, width: 24 }} />
                                             </Box>
-                                            <Typography component="body" style={{ backgroundColor: 'transparent', marginLeft: 20 }}>
-                                            CEDÚLA DE IDENTIDAD (Subir frente del documento de identidad)
-                                    </Typography>
+                                            <Typography  style={{ backgroundColor: 'transparent', marginLeft: 20 }}>
+                                                CEDÚLA DE IDENTIDAD {document && (document.name)} {!document && ('(Subir frente del documento de identidad)')}
+                                            </Typography>
                                     </ListItem>
                                     </label>
 
-                                    <label htmlFor="contained-button-file" style={{width: '100%', marginTop: 25}}>
-                                        <ListItem button htmlFor="contained-button-file" style={{ height: 50, borderRadius: 25, padding: 0, backgroundColor: '#F2F2F2', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+                                    <label htmlFor="contained-button-license" style={{width: '100%', marginTop: 25}}>
+                                        <ListItem button htmlFor="contained-button-license" style={{ height: 50, borderRadius: 25, padding: 0, backgroundColor: '#F2F2F2', display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
                                             <Box style={{width: 40, height: 40, backgroundColor: '#FFDD00', borderRadius: 20, display: 'flex', justifyContent: 'center', alignItems: 'center', marginLeft: 5}}>
                                                 <img src={licencia} style={{ height: 24, width: 24 }} />
                                             </Box>
-                                            <Typography component="body" style={{ backgroundColor: 'transparent', marginLeft: 20 }}>
-                                            LICENCIA DE CONDUCIR (Subir frente de la licencia de conducir)
+                                            <Typography  style={{ backgroundColor: 'transparent', marginLeft: 20 }}>
+                                            LICENCIA DE CONDUCIR {license && (license.name)} {!license && ('(Subir frente de la licencia de conducir)')}
                                     </Typography>
                                     </ListItem>
                                     </label>
@@ -285,53 +327,48 @@ export default function RequestIdentityValidation() {
                                     <input
                                         accept="image/*"
                                         style={{ display: 'none' }}
-                                        id="contained-button-file"
-                                        // multiple
+                                        id="contained-button-passport"
                                         type="file"
-                                        // onChange={(event) => { console.log(event.target.files[0]) }}
+                                        onChange={(event) => { setPassport(event.target.files[0]) }}
+                                    />
+
+                                    <input
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        id="contained-button-document"
+                                        type="file"
                                         onChange={(event) => { setDocument(event.target.files[0]) }}
                                     />
 
+                                    <input
+                                        accept="image/*"
+                                        style={{ display: 'none' }}
+                                        id="contained-button-license"
+                                        type="file"
+                                        onChange={(event) => { setLicense(event.target.files[0]) }}
+                                    />
+
                                     <Box style={{ backgroundColor: '#20F282', height: 50, display: 'flex', justifyContent: 'center', alignItems: 'center', marginTop: 20, borderRadius: 25}}>
-                                    <Typography component="body" style={{ backgroundColor: 'transparent', marginLeft: 10, marginRight: 10 }}>
+                                    <Typography  style={{ backgroundColor: 'transparent', marginLeft: 10, marginRight: 10 }}>
                                         Documento seleccionado                                    
                                     </Typography>
-                                        
                                     </Box>
-                                    {/* <label htmlFor="contained-button-file">
-        <Button variant="contained" color="primary" component="span">
-          Upload
-        </Button>
-      </label> */}
-
-
-
-
-                                    {requesting ? (
-                                        <Button
-                                            onClick={() => { upload(document) }}
-                                            fullWidth
-                                            variant="contained"
-                                            color="primary"
-                                            className={classes.submit}
-                                            style={{ marginTop: 20 }}
-                                        >
-                                            <CircularProgress color="secondary" />
-                                        </Button>
-                                    ) : (
-                                            <Button
-                                                onClick={() => { upload(document) }}
-                                                fullWidth
-                                                variant="contained"
-                                                color="primary"
-                                                className={classes.submit}
-                                                style={{ marginTop: 20 }}
-                                            >
-                                                <Box fontWeight="fontWeightBold">
-                                                    Enviar
-                                                    </Box>
-                                            </Button>
-                                        )}
+                                   
+                                    <Button
+                                        onClick={() => { upload() }}
+                                        fullWidth
+                                        variant="contained"
+                                        color="primary"
+                                        className={classes.submit}
+                                        style={{ marginTop: 20 }}
+                                        disabled={uploading}
+                                    >
+                                        {uploading && <CircularProgress color="secondary" size="1rem" style={{ marginRight: 2 }}/>}
+                                        <Box fontWeight="fontWeightBold">
+                                            Enviar
+                                        </Box>
+                                    </Button>
+                                    
                                 </Paper>
                             </Grid>
                         </Grid>

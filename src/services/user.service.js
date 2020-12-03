@@ -107,14 +107,12 @@ export const userService = {
         })
     },
 
-    uploadDocument: (id, document) => {
-        console.log(document);
-        var formData = new FormData();
-        formData.append('document', document);
+    uploadDocument: (id, documents) => {
+
         const requestOptions = {
             method: 'POST',
-            headers: { ...authHeader(), 'Content-Type': 'multipart/form-data' },
-            body: formData
+            headers: { ...authHeader() },
+            body: documents
         };
     
         return fetch(`${apiUrl}/users/upload-document/${id}`, requestOptions).then(handleResponse).then((response) => {

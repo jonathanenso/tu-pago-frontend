@@ -30,7 +30,7 @@ export default function users(state = {}, action) {
     // Subir documento
     case userConstants.UPLOAD_DOCUMENT_REQUEST:
       return {
-        updating: true
+        uploading: true
       };
     case userConstants.UPLOAD_DOCUMENT_SUCCESS:
       return {
